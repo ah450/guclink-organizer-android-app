@@ -1,4 +1,15 @@
 <resources>
-    <string name="app_name">Organizer</string>
+    <string name="app_name">GUC Planner</string>
     <string name="action_settings">Settings</string>
+    <string name="logoContentDescription">logo</string>
+    <string name="emailInputHint">GUC Email</string>
+    <string name="passwordInputHint">Password</string>
+    <string name="loginBtnText">Login</string>
+    <string name="signupText">No account? Create one</string>
+    <string name="password_login_error">A password is required</string>
+    <string name="login_email_error">Must be a valid GUC email</string>
+    <string name="loginProgressDialogMessage">Authenticating...</string>
+    <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="authTokenKey">authToken</string>
+    <string name="authTokenCreationDateKey">authTokenCreatedAt</string>
 </resources>

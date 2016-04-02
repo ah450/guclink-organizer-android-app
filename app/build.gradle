@@ -15,6 +15,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue 'string', 'authBaseUrl', '"https://auth.guclink.in/api"'
+        }
+        debug {
+            resValue 'string', 'authBaseUrl', '"http://10.0.2.2:3000/api"'
         }
     }
 }
@@ -24,5 +28,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
 }
