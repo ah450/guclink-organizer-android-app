@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -118,9 +119,7 @@ public class AuthService {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                    JSONObject jsonObject = new JSONObject(responseBody);
-                    deferred.reject(jsonObject);
+                    deferred.reject(error.networkResponse);
                 } catch(Exception e) {
                     deferred.reject(e);
                 }
@@ -135,5 +134,37 @@ public class AuthService {
 
         VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(jsonRequest);
         return deferred.promise();
+    }
+
+    /**
+     * Resend verification email
+     * @param email
+     */
+    public static void resendVerify(String email, Context ctx) {
+        try {
+
+            Response.Listener<JSONObject> success = new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            };
+            Response.ErrorListener failure = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    ErrorHandler.reportGenericVolleyError(error);
+                }
+            };
+
+
+            String emailParam = "email=" + Base64.encodeToString(email.getBytes("utf-8"), Base64.URL_SAFE);
+            String url = TextUtils.join("/", new String[] {"users", "resend_verify.json?" + emailParam });
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+                    null, success, failure);
+            VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(request);
+        } catch (Exception e) {
+            ErrorHandler.handleException(e);
+        }
     }
 }

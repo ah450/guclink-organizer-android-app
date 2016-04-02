@@ -1,25 +1,25 @@
 package in.guclink.www.organizer;
 
+import android.support.v4.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.NetworkResponse;
 
 import org.jdeferred.AlwaysCallback;
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
 import org.jdeferred.Promise;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,13 +54,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * Handle resend verification
+     * @param view
+     */
+    public void buttonClickResendVerify(View view) {
+        DialogFragment fragment = new ResendVerifyDialog();
+        fragment.show(getSupportFragmentManager(), "resend_verify");
+    }
+
+    /**
+     * Handle Signup
+     * @param view
+     */
+    public void buttonClickSignup(View view) {
+        Intent intent  = new Intent(this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+    /**
      * Handle login click
      * @param view
      */
     public void buttonClickLogin(View view) {
         if (validate()) {
             if (!State.isConnected(this)) {
-//                TODO: Handle No connection
+                Toast toast = Toast.makeText(this, R.string.noInternetText, Toast.LENGTH_LONG);
+                toast.show();
                 return;
             }
             final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_PopupOverlay);
@@ -74,12 +93,32 @@ public class LoginActivity extends AppCompatActivity {
                 loginPromise.done(new DoneCallback() {
                     @Override
                     public void onDone(Object result) {
-                        launchScheduleActivity();
+                        try {
+                            JSONObject response = (JSONObject) result;
+                            String token = response.getString("token");
+                            AuthService.setToken(token, LoginActivity.this);
+                            launchScheduleActivity();
+                        } catch (Exception e) {
+                            Toast.makeText(LoginActivity.this, R.string.applicationError, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }).fail(new FailCallback() {
                     @Override
                     public void onFail(Object result) {
-
+                        if (result instanceof Exception) {
+                            ErrorHandler.handleException((Exception) result);
+                            Toast.makeText(LoginActivity.this, R.string.applicationError, Toast.LENGTH_SHORT).show();
+                        } else {
+                            NetworkResponse response = (NetworkResponse) result;
+                            switch (response.statusCode) {
+                                case 401:
+                                    Toast.makeText(LoginActivity.this, "Incorrect Username or password", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 403:
+                                    Toast.makeText(LoginActivity.this, "Please verify your email", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
                     }
                 }).always(new AlwaysCallback() {
                     @Override
