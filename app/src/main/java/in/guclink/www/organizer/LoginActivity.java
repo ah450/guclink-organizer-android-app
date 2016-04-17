@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/montserrat/Montserrat-Regular.ttf")
+                        .setDefaultFontPath("fonts/Montserrat-Regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
@@ -117,6 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                                 case 403:
                                     Toast.makeText(LoginActivity.this, "Please verify your email", Toast.LENGTH_SHORT).show();
                                     break;
+                                default:
+                                    ErrorHandler.logError(ErrorHandler.NETWORK_ERROR_CODE, "unexpected login response status code", response);
+                                    Toast.makeText(LoginActivity.this, R.string.applicationError, Toast.LENGTH_SHORT).show();
+                                    break;
                             }
                         }
                     }
@@ -155,12 +159,12 @@ public class LoginActivity extends AppCompatActivity {
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+//                Do Nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+//              Do Nothing
             }
 
             @Override
@@ -180,12 +184,12 @@ public class LoginActivity extends AppCompatActivity {
         password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+//                Do Nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+//              Do nothing
             }
 
             @Override

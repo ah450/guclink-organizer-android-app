@@ -11,5 +11,106 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="in.guclink.www.organizer.SignupActivity"
     tools:showIn="@layout/activity_signup">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        >
+
+        <ImageView
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="200dp"
+            android:layout_height="169dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/logoContentDescription" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:text="@string/signupTitle"
+            android:textColor="@color/colorAccent"
+            android:textStyle="italic"
+            fontPath="fonts/Montserrat-Regular.ttf"
+            tools:ignore="MissingPrefix" />
+
+        <!-- Email -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:textColorHint="@color/colorPrimaryDark"
+
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_email"
+                android:inputType="textEmailAddress"
+                android:hint="@string/emailInputHint"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textColor="@color/colorBlack" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- Password-->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColorHint="@color/colorPrimaryDark"
+
+            >
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:hint="@string/passwordInputHint"
+                android:textColor="@color/colorBlack"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Name-->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColorHint="@color/colorPrimaryDark"
+
+            >
+
+            <EditText
+                android:id="@+id/input_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:hint="@string/nameInputHint"
+                android:textColor="@color/colorBlack"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_create"
+            android:layout_marginTop="35dp"
+            android:padding="12dp"
+            android:text="@string/createAccountText"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:onClick="clickCreate"
+            />
+
+    </LinearLayout>
 
 </RelativeLayout>

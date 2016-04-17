@@ -32,9 +32,33 @@ public class AuthService {
     public static final String GUC_EMAIL_PATTERN = "\\A[a-zA-Z\\.\\-]+@(student.)?guc.edu.eg\\z";
     public static final int DEFAULT_EXPIRATION = 3840;
 
-    public static Promise createAccount(String name, String email, String password) {
-        Deferred deferred = new DeferredObject();
+    public static Promise createAccount(String name, String email, String password, Context ctx) throws JSONException {
+        final Deferred deferred = new DeferredObject();
+        String url = TextUtils.join("/", new String[] {AUTH_API_BASE_URL, "users.json"});
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                deferred.resolve(response);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    deferred.reject(error.networkResponse);
+                } catch(Exception e) {
+                    deferred.reject(e);
+                }
+            }
+        };
+        JSONObject params = new JSONObject();
+        params.put("password", password);
+        params.put("email", email);
+        params.put("name", name);
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                successListener, errorListener);
 
+        VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(jsonRequest);
         return deferred.promise();
     }
 
