@@ -34,8 +34,25 @@ public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.btn_login) Button loginBtn;
 
     @Override
+    protected void onResume() {
+       if(AuthService.isLoggedIn(getApplicationContext())) {
+           Intent intent = new Intent(this, ScheduleActivity.class);
+           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+           startActivity(intent);
+           finish();
+       }
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(AuthService.isLoggedIn(getApplicationContext())) {
+            Intent intent = new Intent(this, ScheduleActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
         setContentView(R.layout.activity_login);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Montserrat-Regular.ttf")
@@ -139,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void launchScheduleActivity() {
         Intent intent = new Intent(this, ScheduleActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
     private boolean validateEmail() {

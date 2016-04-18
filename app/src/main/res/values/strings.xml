@@ -29,5 +29,5 @@
     <string name="signup_error_dialog_title">Error</string>
     <string name="confirm">Confirm</string>
     <string name="title_activity_welcome">Welcome</string>
-    <string name="welcome_string">Welcome to GUCLINK, your account has been successfully created and a verification email was sent to your guc email with instructions on how to activate it. You need to activate your account before using any of GUCLINK's services</string>
+    <string name="welcome_string">Welcome to GUCLINK, your account has been successfully created and a verification email was sent to your guc email with instructions on how to activate it. You need to activate your account before using any of GUCLINK\'s services</string>
 </resources>
