@@ -28,36 +28,18 @@ import in.guclink.www.organizer.util.ErrorHandler;
 import in.guclink.www.organizer.util.State;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends PublicActivity {
     @Bind(R.id.input_email) EditText email;
     @Bind(R.id.input_password) EditText password;
     @Bind(R.id.btn_login) Button loginBtn;
 
     @Override
-    protected void onResume() {
-       if(AuthService.isLoggedIn(getApplicationContext())) {
-           Intent intent = new Intent(this, ScheduleActivity.class);
-           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-           startActivity(intent);
-           finish();
-       }
-        super.onResume();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(AuthService.isLoggedIn(getApplicationContext())) {
-            Intent intent = new Intent(this, ScheduleActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
+    public void onCreateActual(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Montserrat-Regular.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
+                .setDefaultFontPath("fonts/Montserrat-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
         );
         ButterKnife.bind(this);
         addEmailTextWatcher();
