@@ -10,7 +10,7 @@ public class Exam implements Schedulable {
         return null;
     }
 
-    private static Exam fromJSON(JSONObject data) throws JSONException {
+    public static Exam fromJSON(JSONObject data) throws JSONException {
         return null;
     }
 }

@@ -14,7 +14,6 @@ import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
 import org.jdeferred.Promise;
 import org.jdeferred.android.AndroidDeferredManager;
-import org.jdeferred.impl.AbstractDeferredManager;
 import org.jdeferred.impl.DeferredObject;
 import org.jdeferred.multiple.MultipleResults;
 import org.jdeferred.multiple.OneReject;
@@ -26,7 +25,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import in.guclink.www.organizer.BuildConfig;
 import in.guclink.www.organizer.models.Event;
@@ -90,6 +88,49 @@ public class OrganizerService {
     }
 
     public Promise<List<Exam>, Object, Object> getExams(GUCCredentials creds, final Context ctx) {
+        final Deferred<List<Exam>, Object, Object> deferred = new DeferredObject<List<Exam>, Object, Object>();
+        String url = TextUtils.join("/", new String[] {ORGANIZER_BASE_URL, "exams.json"});
+        try {
+            JSONObject params = new JSONObject();
+            params.put("guc_password", creds.password);
+            params.put("guc_username", creds.name);
+            Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray jsonExams = response.getJSONArray("exams");
+                        ArrayList<Exam> exams = new ArrayList<Exam>();
+                        for(int i = 0; i < jsonExams.length(); i++) {
+                            exams.add(Exam.fromJSON(jsonExams.getJSONObject(i)));
+                        }
+                        deferred.resolve(exams);
+                    } catch(Exception e) {
+                        ErrorHandler.handleException(e);
+                        deferred.reject(e);
+                    }
+                }
+            };
+            Response.ErrorListener errorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        ErrorHandler.logError(error.networkResponse.statusCode, "Error fetching exams",
+                                error.networkResponse);
+                        deferred.reject(error.networkResponse);
+                    } catch(Exception e) {
+                        ErrorHandler.handleException(e);
+                        deferred.reject(e);
+                    }
+                }
+            };
+            JsonObjectRequest jsonRequest = new AuthenticatedJSONObjectRequest(Request.Method.POST,
+                    url, params, successListener, errorListener, ctx);
+            VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(jsonRequest);
+        } catch(JSONException e) {
+            ErrorHandler.handleException(e);
+            deferred.reject(e);
+        }
+        return deferred.promise();
     }
 
     public Promise<List<Event>, Object, Object> getEvents(final Context ctx) {
