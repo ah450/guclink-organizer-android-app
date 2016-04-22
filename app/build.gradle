@@ -24,13 +24,13 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue 'string', 'authBaseUrl', 'https://auth.guclink.in/api'
-            resValue 'string', 'organizerBaseUrl', 'https://organizer.guclink.in/api'
+            buildConfigField 'String', 'authBaseUrl', '"https://auth.guclink.in/api"'
+            buildConfigField 'String', 'organizerBaseUrl', '"https://organizer.guclink.in/api"'
         }
         debug {
             minifyEnabled false
-            resValue 'string', 'authBaseUrl', 'http://10.0.2.2:3000/api'
-            resValue 'string', 'organizerBaseUrl', 'http://10.0.2.2:3001/api'
+            buildConfigField 'String', 'authBaseUrl', '"http://10.0.2.2:3000/api"'
+            buildConfigField 'String', 'organizerBaseUrl', '"http://10.0.2.2:3001/api"'
         }
     }
 }

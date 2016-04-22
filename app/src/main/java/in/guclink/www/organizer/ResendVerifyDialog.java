@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 
 
@@ -24,7 +25,8 @@ public class ResendVerifyDialog  extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.dialog_resend_verify, null)
+        View view = inflater.inflate(R.layout.dialog_resend_verify, null);
+        builder.setView(view
         ).setPositiveButton(R.string.resend, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -44,7 +46,7 @@ public class ResendVerifyDialog  extends DialogFragment {
         });
 
         Dialog dialog = builder.create();
-        ButterKnife.bind(dialog);
+        ButterKnife.bind(this, view);
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,14 +22,16 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+import in.guclink.www.organizer.BuildConfig;
 import in.guclink.www.organizer.R;
+import in.guclink.www.organizer.models.User;
 import in.guclink.www.organizer.util.ErrorHandler;
 
 /**
  * Created by ahi on 30/03/16.
  */
 public class AuthService {
-    public static final String AUTH_API_BASE_URL = Resources.getSystem().getString(R.string.authBaseUrl);
+    public static final String AUTH_API_BASE_URL = BuildConfig.authBaseUrl;
     public static final String GUC_EMAIL_PATTERN = "\\A[a-zA-Z\\.\\-]+@(student.)?guc.edu.eg\\z";
     public static final int DEFAULT_EXPIRATION = 3840;
 
@@ -65,23 +68,45 @@ public class AuthService {
 
     public static boolean isLoggedIn(Context ctx) {
         SharedPreferences sp = getSharedPreferences(ctx);
-        return hasToken(sp) && notExpired(getToken(ctx), ctx);
+        return hasToken(sp, ctx.getResources()) && notExpired(getToken(ctx), ctx);
     }
 
     public static void logout(Context ctx) {
         SharedPreferences sp = getSharedPreferences(ctx);
         if (isLoggedIn(ctx)) {
             SharedPreferences.Editor editor = sp.edit();
-            editor.remove(Resources.getSystem().getString(R.string.authTokenKey));
-            editor.remove(Resources.getSystem().getString(R.string.authTokenCreationDateKey));
+            editor.remove(ctx.getResources().getString(R.string.authTokenKey));
+            editor.remove(ctx.getResources().getString(R.string.authTokenCreationDateKey));
         }
     }
 
     public static void setToken(String token, Context ctx) {
         SharedPreferences sp = getSharedPreferences(ctx);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Resources.getSystem().getString(R.string.authTokenKey), token);
-        setTokenCreationDate(ctx);
+        editor.putString(ctx.getResources().getString(R.string.authTokenKey), token);
+        setTokenCreationDate(ctx, editor);
+        editor.apply();
+    }
+
+    public static void setUser(JSONObject user, Context ctx) {
+        SharedPreferences sp = getSharedPreferences(ctx);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(ctx.getResources().getString(R.string.currentUserSPKey), user.toString());
+        editor.apply();
+    }
+
+    public static User getUser(Context ctx) {
+        SharedPreferences sp = getSharedPreferences(ctx);
+        String key = ctx.getResources().getString(R.string.currentUserSPKey);
+        if (!sp.contains(key)) {
+            return null;
+        }
+        try {
+            return User.fromJSON(new JSONObject(sp.getString(key, null)));
+        } catch (JSONException e) {
+            ErrorHandler.handleException(e);
+            return null;
+        }
     }
 
     public static boolean notExpired(String token, Context ctx) {
@@ -101,28 +126,26 @@ public class AuthService {
 
     public static String getToken(Context ctx) {
         SharedPreferences sp = getSharedPreferences(ctx);
-        return sp.getString(Resources.getSystem().getString(R.string.authTokenKey), null);
+        return sp.getString(ctx.getResources().getString(R.string.authTokenKey), null);
     }
 
     private static Date getTokenCreationDate(Context ctx) throws ParseException {
         SharedPreferences sp = getSharedPreferences(ctx);
         DateFormat df = DateFormat.getDateTimeInstance();
-        return df.parse(sp.getString(Resources.getSystem().getString(R.string.authTokenCreationDateKey), null));
+        return df.parse(sp.getString(ctx.getResources().getString(R.string.authTokenCreationDateKey), null));
     }
 
-    private static void setTokenCreationDate(Context ctx) {
-        SharedPreferences sp = getSharedPreferences(ctx);
-        SharedPreferences.Editor editor = sp.edit();
+    private static void setTokenCreationDate(Context ctx, SharedPreferences.Editor editor) {
         DateFormat df = DateFormat.getDateTimeInstance();
-        editor.putString(Resources.getSystem().getString(R.string.authTokenCreationDateKey), df.format(new Date()));
+        editor.putString(ctx.getResources().getString(R.string.authTokenCreationDateKey), df.format(new Date()));
     }
 
     private static SharedPreferences getSharedPreferences(Context ctx) {
         return ctx.getSharedPreferences("AUTH_SHARED_PREFS", Context.MODE_PRIVATE);
     }
 
-    private static boolean hasToken(SharedPreferences sp) {
-        return sp.contains(Resources.getSystem().getString(R.string.authTokenKey));
+    private static boolean hasToken(SharedPreferences sp, Resources res) {
+        return sp.contains(res.getString(R.string.authTokenKey));
     }
 
     /**
@@ -149,10 +172,13 @@ public class AuthService {
                 }
             }
         };
+        JSONObject token = new JSONObject();
+        token.put("password", password);
+        token.put("email", email);
+        token.put("expiration", expiration);
         JSONObject params = new JSONObject();
-        params.put("password", password);
-        params.put("email", email);
-        params.put("expiration", expiration);
+        params.put("token", token);
+
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, params,
                 successListener, errorListener);
 
@@ -180,11 +206,10 @@ public class AuthService {
                     ErrorHandler.reportGenericVolleyError(error);
                 }
             };
-
-
-            String emailParam = "email=" + Base64.encodeToString(email.getBytes("utf-8"), Base64.URL_SAFE);
-            String url = TextUtils.join("/", new String[] {"users", "resend_verify.json?" + emailParam });
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+            String emailParam = Base64.encodeToString(email.getBytes(), Base64.URL_SAFE).trim();
+            String [] urlArray = new String[] {AUTH_API_BASE_URL, "users", emailParam, "resend_verify.json"};
+            String url = TextUtils.join("/", urlArray);
+            JsonObjectRequest request = new JsonObjectRequest(url,
                     null, success, failure);
             VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(request);
         } catch (Exception e) {

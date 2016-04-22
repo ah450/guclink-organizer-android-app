@@ -7,7 +7,9 @@
     android:background="@color/colorBackground"
     tools:context="in.guclink.www.organizer.SignupActivity">
 
-
-    <include layout="@layout/content_signup" />
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/content_signup" />
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

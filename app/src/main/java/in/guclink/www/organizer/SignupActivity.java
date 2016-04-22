@@ -56,7 +56,7 @@ public class SignupActivity extends PublicActivity {
                 toast.show();
                 return;
             }
-            final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_PopupOverlay);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage(getString(R.string.signupProgressDialogMessage));
             progressDialog.show();

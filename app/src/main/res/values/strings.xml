@@ -13,8 +13,8 @@
     <string name="email_signup_error">Must be a valid GUC email</string>
     <string name="loginProgressDialogMessage">Authenticating...</string>
     <string name="title_activity_schedule">Schedule</string>
-    <string name="authTokenKey">authToken</string>
-    <string name="authTokenCreationDateKey">authTokenCreatedAt</string>
+    <string name="authTokenKey" translatable="false">authToken</string>
+    <string name="authTokenCreationDateKey" translatable="false">authTokenCreatedAt</string>
     <string name="resendVerifyText">Resend verification</string>
     <string name="title_activity_signup">Signup</string>
     <string name="resendVerificationDialogTitle">Resend Verification</string>
@@ -30,4 +30,5 @@
     <string name="confirm">Confirm</string>
     <string name="title_activity_welcome">Welcome</string>
     <string name="welcome_string">Welcome to GUCLINK, your account has been successfully created and a verification email was sent to your guc email with instructions on how to activate it. You need to activate your account before using any of GUCLINK\'s services</string>
+    <string name="currentUserSPKey">CURRENT_USER</string>
 </resources>

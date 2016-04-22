@@ -20,8 +20,8 @@
 
         <ImageView
             android:src="@mipmap/ic_launcher"
-            android:layout_width="200dp"
-            android:layout_height="169dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitXY"
             android:contentDescription="@string/logoContentDescription" />
@@ -47,7 +47,7 @@
             android:textColorHint="@color/colorPrimaryDark"
 
             >
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/input_email"
@@ -66,7 +66,7 @@
 
             >
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 
             >
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

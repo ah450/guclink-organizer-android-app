@@ -30,7 +30,11 @@
             android:background="@drawable/toolbar_dropshadow" />
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/content_welcome" />
+        <include layout="@layout/content_welcome" />
 
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

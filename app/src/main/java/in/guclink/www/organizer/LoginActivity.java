@@ -81,7 +81,7 @@ public class LoginActivity extends PublicActivity {
                 toast.show();
                 return;
             }
-            final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_PopupOverlay);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage(getString(R.string.loginProgressDialogMessage));
             progressDialog.show();
@@ -96,6 +96,7 @@ public class LoginActivity extends PublicActivity {
                             JSONObject response = (JSONObject) result;
                             String token = response.getString("token");
                             AuthService.setToken(token, LoginActivity.this);
+                            AuthService.setUser(response.getJSONObject("user"), LoginActivity.this);
                             launchScheduleActivity();
                         } catch (Exception e) {
                             Toast.makeText(LoginActivity.this, R.string.applicationError, Toast.LENGTH_SHORT).show();

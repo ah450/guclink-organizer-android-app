@@ -28,9 +28,11 @@
             android:layout_below="@id/toolbar"
             android:background="@drawable/toolbar_dropshadow" />
     </RelativeLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <include layout="@layout/content_schedule" />
-
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
