@@ -2,6 +2,7 @@ package in.guclink.www.organizer.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -204,6 +205,7 @@ public class OrganizerService {
         return getSharedPreferences(ctx).contains(ctx.getResources().getString(R.string.gucCredsKey));
     }
 
+    @Nullable
     public static GUCCredentials getGUCCredentials(Context ctx) {
         if(hasGUCCredentials(ctx)) {
             SharedPreferences sp = getSharedPreferences(ctx);
