@@ -26,4 +26,8 @@ public class Event implements Schedulable, Followable {
     public JSONObject toJSONObject() throws JSONException {
         return null;
     }
+
+    public static Event fromJSON(JSONObject data) throws JSONException {
+        return null;
+    }
 }

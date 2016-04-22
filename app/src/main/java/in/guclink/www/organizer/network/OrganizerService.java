@@ -93,6 +93,40 @@ public class OrganizerService {
     }
 
     public Promise<List<Event>, Object, Object> getEvents(final Context ctx) {
+        final Deferred<List<Event>, Object, Object> deferred = new DeferredObject<List<Event>, Object, Object>();
+        String url = TextUtils.join("/", new String[] {ORGANIZER_BASE_URL, "events.json"});
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray eventJson = response.getJSONArray("events");
+                    ArrayList<Event> events = new ArrayList<Event>();
+                    for (int i = 0; i < eventJson.length(); i++) {
+                        events.add(Event.fromJSON(eventJson.getJSONObject(i)));
+                    }
+                    deferred.resolve(events);
+                } catch (Exception e) {
+                    ErrorHandler.handleException(e);
+                    deferred.reject(e);
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    ErrorHandler.logError(error.networkResponse.statusCode, "Error fetching events",
+                            error.networkResponse);
+                    deferred.reject(error.networkResponse);
+                } catch(Exception e) {
+                    ErrorHandler.handleException(e);
+                    deferred.reject(e);
+                }
+            }
+        };
+        JsonObjectRequest request = new AuthenticatedJSONObjectRequest(url, null, successListener, errorListener, ctx);
+        VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(request);
+        return deferred.promise();
     }
 
     public Promise<List<Schedulable>, Object, Object> getSchedule(GUCCredentials creds, Context ctx) {
