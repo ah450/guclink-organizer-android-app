@@ -105,4 +105,19 @@ public class ScheduleSlot implements Schedulable, Followable {
         data.put("course", getCourse().toJSONObject());
         return data;
     }
+
+    @Override
+    public String getGCMTopic() {
+        return getTopicID();
+    }
+
+    @Override
+    public boolean hasParentTopic() {
+        return true;
+    }
+
+    @Override
+    public String getGCMParentTopic() {
+        return getGroup_topic_id();
+    }
 }

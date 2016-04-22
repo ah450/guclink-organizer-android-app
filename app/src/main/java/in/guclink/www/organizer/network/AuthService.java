@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
 
 import in.guclink.www.organizer.BuildConfig;
 import in.guclink.www.organizer.R;
@@ -28,7 +29,7 @@ import in.guclink.www.organizer.models.User;
 import in.guclink.www.organizer.util.ErrorHandler;
 
 /**
- * Created by ahi on 30/03/16.
+ * Service for accesing AUTH api
  */
 public class AuthService {
     public static final String AUTH_API_BASE_URL = BuildConfig.authBaseUrl;
@@ -214,6 +215,13 @@ public class AuthService {
             VolleyQueueSingleton.getInstance(ctx).addToRequestQueue(request);
         } catch (Exception e) {
             ErrorHandler.handleException(e);
+        }
+    }
+
+    public static void addTokenHeader(Map<String, String> headers, Context ctx) {
+        if(isLoggedIn(ctx)) {
+            String value = "Bearer " + getToken(ctx);
+            headers.put("Authorization", value);
         }
     }
 }

@@ -3,9 +3,6 @@ package in.guclink.www.organizer.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by ahi on 22/04/16.
- */
 public class Course implements Followable, JSONSerializable {
     private String name, ID, topicID;
     private Course(String name, String id, String topicID) {
@@ -31,6 +28,8 @@ public class Course implements Followable, JSONSerializable {
                 data.getString("topic_id"));
     }
 
+
+
     @Override
     public JSONObject toJSONObject() throws JSONException {
         JSONObject data = new JSONObject();
@@ -38,5 +37,20 @@ public class Course implements Followable, JSONSerializable {
         data.put("id", getID());
         data.put("topic_id", getTopicID());
         return data;
+    }
+
+    @Override
+    public String getGCMTopic() {
+        return getTopicID();
+    }
+
+    @Override
+    public boolean hasParentTopic() {
+        return false;
+    }
+
+    @Override
+    public String getGCMParentTopic() {
+        return null;
     }
 }
