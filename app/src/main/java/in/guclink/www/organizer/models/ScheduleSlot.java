@@ -89,4 +89,20 @@ public class ScheduleSlot implements Schedulable, Followable {
                 course);
     }
 
+    @Override
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("slot_num", getSlotNumber());
+        data.put("day", getDayNumber());
+        data.put("id", getID());
+        data.put("group", getGroup());
+        data.put("name", getName());
+        data.put("topic_id", getTopicID());
+        data.put("group_topic_id", getGroup_topic_id());
+        data.put("lab", isLab());
+        data.put("lecture", isLecture());
+        data.put("tutorial", isTutorial());
+        data.put("course", getCourse().toJSONObject());
+        return data;
+    }
 }

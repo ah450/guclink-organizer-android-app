@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by ahi on 22/04/16.
  */
-public class Course implements Followable {
+public class Course implements Followable, JSONSerializable {
     private String name, ID, topicID;
     private Course(String name, String id, String topicID) {
         this.name = name;
@@ -29,5 +29,14 @@ public class Course implements Followable {
     public static Course fromJSON(JSONObject data) throws JSONException {
         return new Course(data.getString("name"), data.getString("id"),
                 data.getString("topic_id"));
+    }
+
+    @Override
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("name", getName());
+        data.put("id", getID());
+        data.put("topic_id", getTopicID());
+        return data;
     }
 }

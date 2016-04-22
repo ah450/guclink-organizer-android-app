@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by ahi on 22/04/16.
  */
-public class User {
+public class User implements JSONSerializable {
 
     private String name, fullName, email;
     private boolean student, superUser;
