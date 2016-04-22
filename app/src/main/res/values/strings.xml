@@ -31,4 +31,5 @@
     <string name="title_activity_welcome">Welcome</string>
     <string name="welcome_string">Welcome to GUCLINK, your account has been successfully created and a verification email was sent to your guc email with instructions on how to activate it. You need to activate your account before using any of GUCLINK\'s services</string>
     <string name="currentUserSPKey">CURRENT_USER</string>
+    <string name="gucCredsKey">GUC_ORGANIZER_CREDS</string>
 </resources>

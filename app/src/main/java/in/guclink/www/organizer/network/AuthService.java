@@ -73,12 +73,7 @@ public class AuthService {
     }
 
     public static void logout(Context ctx) {
-        SharedPreferences sp = getSharedPreferences(ctx);
-        if (isLoggedIn(ctx)) {
-            SharedPreferences.Editor editor = sp.edit();
-            editor.remove(ctx.getResources().getString(R.string.authTokenKey));
-            editor.remove(ctx.getResources().getString(R.string.authTokenCreationDateKey));
-        }
+        clearSharedPreferences(ctx);
     }
 
     public static void setToken(String token, Context ctx) {
@@ -104,7 +99,7 @@ public class AuthService {
         }
         try {
             return User.fromJSON(new JSONObject(sp.getString(key, null)));
-        } catch (JSONException e) {
+        } catch (Exception e) {
             ErrorHandler.handleException(e);
             return null;
         }
@@ -143,6 +138,13 @@ public class AuthService {
 
     private static SharedPreferences getSharedPreferences(Context ctx) {
         return ctx.getSharedPreferences("AUTH_SHARED_PREFS", Context.MODE_PRIVATE);
+    }
+
+    public static void clearSharedPreferences(Context ctx) {
+        SharedPreferences sp = getSharedPreferences(ctx);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
     }
 
     private static boolean hasToken(SharedPreferences sp, Resources res) {

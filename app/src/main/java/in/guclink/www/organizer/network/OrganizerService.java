@@ -1,9 +1,9 @@
 package in.guclink.www.organizer.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import in.guclink.www.organizer.BuildConfig;
+import in.guclink.www.organizer.R;
 import in.guclink.www.organizer.models.Event;
 import in.guclink.www.organizer.models.Exam;
 import in.guclink.www.organizer.models.Schedulable;
@@ -191,5 +192,40 @@ public class OrganizerService {
             }
         });
         return deferred.promise();
+    }
+
+    public static void storeGUCCredentials(GUCCredentials creds, Context ctx) throws JSONException {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(ctx.getResources().getString(R.string.gucCredsKey), creds.toJSONObject().toString());
+        editor.apply();
+    }
+
+    public static boolean hasGUCCredentials(Context ctx) {
+        return getSharedPreferences(ctx).contains(ctx.getResources().getString(R.string.gucCredsKey));
+    }
+
+    public static GUCCredentials getGUCCredentials(Context ctx) {
+        if(hasGUCCredentials(ctx)) {
+            SharedPreferences sp = getSharedPreferences(ctx);
+            try {
+                return GUCCredentials.fromJSON(new JSONObject(sp.getString(ctx.getResources().getString(R.string.gucCredsKey), null)));
+            } catch (Exception e) {
+                ErrorHandler.handleException(e);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private static SharedPreferences getSharedPreferences(Context ctx) {
+        return ctx.getSharedPreferences("ORGANIZER_SHARED_PREFS", Context.MODE_PRIVATE);
+    }
+
+    public static void clearSharedPreferences(Context ctx) {
+        SharedPreferences sp = getSharedPreferences(ctx);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
     }
 }
